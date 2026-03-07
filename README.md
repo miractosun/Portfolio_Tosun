@@ -1,4 +1,4 @@
-# Digital Portfolio – Mirac Tosun
+# Digital Portfolio
 
 Dieses Repository enthält mein persönliches **digitales Portfolio**.  
 Die Website dient als zentrale Plattform, um meinen **Lebenslauf, meine Fähigkeiten und zukünftige Projekte** übersichtlich und öffentlich zu präsentieren.
