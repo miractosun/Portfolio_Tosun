@@ -353,6 +353,26 @@ section p, section .timeline-story, section .card h3 {
     gap:25px;
   }
 }
+
+/*-----------GitHub-Button CSS --------*/
+.github-btn{
+display:inline-flex;
+align-items:center;
+padding:10px 18px;
+border-radius:30px;
+text-decoration:none;
+font-weight:600;
+font-size:0.9rem;
+color:white;
+background:linear-gradient(90deg,#8be9fd,#bd93f9);
+transition:0.3s;
+}
+
+.github-btn:hover{
+transform:translateY(-3px);
+box-shadow:0 10px 20px rgba(124,58,237,0.3);
+}
+/*--------- CSS-Ende ----------------*/
 </style>
 </head>
 <body>
@@ -512,7 +532,7 @@ section p, section .timeline-story, section .card h3 {
   </div>
 </section>
 
-<!-- PROJECTS -->
+<!-- PROJEKTE -->
 <section id="projects">
   <h2>Projekte</h2>
   <div class="projects">
@@ -567,7 +587,6 @@ section p, section .timeline-story, section .card h3 {
           <strong>Testdurchführung:</strong>Jede Abfrage wurde mehrfach wiederholt, um verlässliche Ergebnisse zu erhalten. Dabei wurden sowohl Ausführungszeiten als auch CPU-Auslastung überwacht, um die Performance objektiv zu messen.<br>
           <strong>Ergebnis & Mehrwert: </strong>Die Arbeit lieferte eine fundierte Entscheidungsgrundlage für eine skalierbare Datenarchitektur und vertiefte meine Praxiskenntnisse in Datenbankdesign, Query-Optimierung und Performance-Monitoring.</p>
 </div>
-
 <div>
     <!-- Projekt 3 -->
     <div class="card">
@@ -576,11 +595,10 @@ section p, section .timeline-story, section .card h3 {
       <p class="timeline-story">Im Copyservice unseres Familienbetriebs mussten Mitarbeiter täglich Aufträge manuell erfassen und Preise berechnen – ein komplexer Prozess, da die Kosten von mehreren Faktoren wie Seitenanzahl, Papierformat (A4/A3) sowie Farb- oder Schwarz-Weiß-Druck abhingen. Um den Prozess zu vereinfachen, <strong>entwickelte ich ein Python-Tool</strong>, das alle Faktoren automatisch berücksichtigt. Der Mitarbeiter trägt einfach die Auftragsdaten ein, und das Programm berechnet den genauen Preis, zeigt ihn sofort an und sorgt dafür, dass Abrechnungen schneller, fehlerfrei und zuverlässig erfolgen. So wurde ein komplexer, fehleranfälliger Arbeitsprozess effizient und übersichtlich – echte Erleichterung im Alltag.
       </p>
     </div>
-
-  </div>
+</div>
 </section>
 
-<!-- CERTIFICATES -->
+<!-- Zertifikate -->
 <section id="cert" style="position:relative; color:white; padding:60px 20px; border-radius:30px; backdrop-filter:blur(10px); background-image:url('https://images.unsplash.com/photo-1508780709619-79562169bc64?auto=format&fit=crop&w=1400&q=80'); background-size:cover; background-position:center;">
   <div style="background:rgba(0,0,0,0.6); padding:40px; border-radius:20px;">
     <h2>Zertifizierungen</h2>
@@ -600,7 +618,48 @@ section p, section .timeline-story, section .card h3 {
     </div>
   </div>
 </section>
+<!--Mini-Projekte -->
+<section id="mini-projects">
+<h2>Technische Experimente & Mini-Projekte</h2>
+<p class="timeline-story">
+Zur kontinuierlichen Erweiterung meines technischen Wissens entwickle ich kleinere Tools und Experimente,
+ mit denen ich Konzepte aus Bereichen wie <strong>Cybersecurity, Automatisierung und Datenanalyse praktisch untersuche und umsetze.</strong>
+<br>
+<br>
+</p>
+<div class="projects">
+<div class="card">
+<h3>Passwort Sicherheitsanalyse Tool</h3>
+<p class="timeline-story">
+Dieses Tool analysiert die Sicherheit eines Passworts anhand
+mehrerer Kriterien. Dabei werden Passwortlänge, enthaltene
+Zeichentypen, Entropie sowie eine geschätzte Brute-Force-Zeit
+berechnet. Zusätzlich erfolgt ein Vergleich mit häufig
+verwendeten Passwörtern, um unsichere Kombinationen zu erkennen.
+</p>
+<div style="margin-top:20px">
+<input type="text" id="passwordInput"
+placeholder="Passwort eingeben"
+style="padding:10px;border-radius:10px;border:none;width:100%;margin-bottom:10px;">
+<button onclick="analysierePasswort()">
+Passwort analysieren
+</button>
 
+<a href="https://github.com/miractosun/Password-Security-Analyzer.git"
+target="_blank"
+class="github-btn">
+GitHub Repository
+</a>
+
+<div id="result"
+style="margin-top:15px;font-size:14px;line-height:1.6;">
+</div>
+</div>
+</div>
+</div>
+
+</section>
+<!---------------------------------- JavaScript Anfang --------------------------------->
 <script>
 /* Typing Effect */
 const texts=["Bereit, analytisch und strukturiert spannende Aufgaben zu meistern."];
@@ -664,7 +723,116 @@ function animateParticles(){
   requestAnimationFrame(animateParticles);
 }
 animateParticles();
-</script>
 
+/************************** Funktion Passwort Security Analyzer ***********************/
+
+const VERSUCHE_PRO_SEKUNDE = 10 ** 12;
+
+const HAEUFIGE_PASSWOERTER = [
+"123456","password","123456789","12345678","12345","qwerty","abc123"
+];
+
+function analysierePasswort(){
+
+let passwort = document.getElementById("passwordInput").value;
+
+if(passwort.length === 0){
+document.getElementById("result").innerHTML =
+"Bitte ein Passwort eingeben.";
+return;
+}
+
+let laenge = passwort.length;
+
+let hatGross = /[A-Z]/.test(passwort);
+let hatKlein = /[a-z]/.test(passwort);
+let hatZahl = /[0-9]/.test(passwort);
+let hatSonder = /[^A-Za-z0-9]/.test(passwort);
+
+let charset = 0;
+
+if(hatKlein) charset+=26;
+if(hatGross) charset+=26;
+if(hatZahl) charset+=10;
+if(hatSonder) charset+=32;
+
+let entropie = laenge * Math.log2(charset || 1);
+
+let kombinationen = Math.pow(charset, laenge);
+let sekunden = kombinationen / VERSUCHE_PRO_SEKUNDE;
+
+let bruteforce;
+
+if(sekunden < 60){
+bruteforce = sekunden.toFixed(2)+" Sekunden";
+}
+else if(sekunden < 3600){
+bruteforce = (sekunden/60).toFixed(2)+" Minuten";
+}
+else if(sekunden < 86400){
+bruteforce = (sekunden/3600).toFixed(2)+" Stunden";
+}
+else if(sekunden < 31536000){
+bruteforce = (sekunden/86400).toFixed(2)+" Tage";
+}
+else{
+bruteforce = (sekunden/31536000).toFixed(2)+" Jahre";
+}
+
+let imDictionary =
+HAEUFIGE_PASSWOERTER.includes(passwort.toLowerCase());
+
+let sicherheit;
+let farbe;
+
+if(imDictionary || entropie < 28){
+sicherheit="Schwach";
+farbe="#ff4d4d";
+}
+else if(entropie < 50){
+sicherheit="Mittel";
+farbe="#ffd166";
+}
+else{
+sicherheit="Stark";
+farbe="#06d6a0";
+}
+let progress = Math.min(entropie,100);
+let result = `
+
+<b>Länge:</b> ${laenge}<br>
+<b>Großbuchstaben:</b> ${hatGross?"Ja":"Nein"}<br>
+<b>Kleinbuchstaben:</b> ${hatKlein?"Ja":"Nein"}<br>
+<b>Zahlen:</b> ${hatZahl?"Ja":"Nein"}<br>
+<b>Sonderzeichen:</b> ${hatSonder?"Ja":"Nein"}<br>
+<b>Entropie:</b> ${entropie.toFixed(2)} bits<br>
+<b>Brute-Force Zeit:</b> ${bruteforce}
+
+<br><br>
+
+<b>Sicherheitsbewertung:</b>
+<span style="color:${farbe};font-weight:700">
+${sicherheit}
+</span>
+
+<div style="margin-top:10px;
+background:rgba(255,255,255,0.2);
+border-radius:8px;height:8px;">
+
+<div style="
+width:${progress}%;
+background:${farbe};
+height:100%;
+border-radius:8px;">
+</div>
+</div>
+`;
+
+if(imDictionary){
+result += "<br>⚠️ Häufig verwendetes Passwort!";
+}
+document.getElementById("result").innerHTML=result;
+}
+</script>
 </body>
 </html>
